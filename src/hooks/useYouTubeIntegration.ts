@@ -1,11 +1,19 @@
 import { useState } from 'react';
 
+interface ChannelData {
+  channel_id?: string;
+  channel_name?: string;
+  subscribers?: number;
+  total_views?: number;
+  videos_count?: number;
+}
+
 export function useYouTubeIntegration() {
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
   // This function creates dummy channel data instead of connecting to Supabase
-  const connectYouTubeChannel = async (userId, channelData) => {
+  const connectYouTubeChannel = async (_userId: string, channelData: ChannelData) => {
     try {
       setLoading(true);
       setError(null);
@@ -35,7 +43,7 @@ export function useYouTubeIntegration() {
     }
   };
 
-  const disconnectYouTubeChannel = async (userId, channelId) => {
+  const disconnectYouTubeChannel = async () => {
     try {
       setLoading(true);
       setError(null);
@@ -53,7 +61,7 @@ export function useYouTubeIntegration() {
     }
   };
 
-  const refreshYouTubeTokens = async (userId, channelId) => {
+  const refreshYouTubeTokens = async () => {
     try {
       setLoading(true);
       setError(null);

@@ -73,7 +73,7 @@ const YouTubeChannelManager: React.FC<YouTubeChannelManagerProps> = ({
     setLoading(channelId);
 
     try {
-      await disconnectYouTubeChannel(userId, channelId);
+      await disconnectYouTubeChannel();
       setSuccess('Channel disconnected successfully!');
       onChannelsUpdate();
     } catch (err) {
@@ -89,7 +89,7 @@ const YouTubeChannelManager: React.FC<YouTubeChannelManagerProps> = ({
     setLoading(`refresh-${channelId}`);
 
     try {
-      await refreshYouTubeTokens(userId, channelId);
+      await refreshYouTubeTokens();
       setSuccess('Channel tokens refreshed successfully!');
       onChannelsUpdate();
     } catch (err) {

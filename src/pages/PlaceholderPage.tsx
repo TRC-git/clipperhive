@@ -6,9 +6,19 @@ import { Construction } from 'lucide-react';
 interface PlaceholderPageProps {
   title: string;
   description: string;
+  progress?: number;
+  action?: {
+    label: string;
+    onClick: () => void;
+  };
 }
 
-const PlaceholderPage: React.FC<PlaceholderPageProps> = ({ title, description }) => {
+const PlaceholderPage: React.FC<PlaceholderPageProps> = ({ 
+  title, 
+  description, 
+  progress = 65, 
+  action 
+}) => {
   const { user, loading } = useAuth();
 
   // Loading state
@@ -60,36 +70,46 @@ const PlaceholderPage: React.FC<PlaceholderPageProps> = ({ title, description })
   }
 
   return (
-    <div className="bg-gray-50 min-h-[calc(100vh-4rem)]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          <div className="md:flex md:items-center md:justify-between">
-            <div className="flex-1 min-w-0">
-              <h1 className="text-3xl font-bold text-gray-900">
-                {title}
-              </h1>
-              <p className="mt-1 text-sm text-gray-500">
-                {description}
-              </p>
-            </div>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <div className="md:flex md:items-center md:justify-between">
+          <div className="flex-1 min-w-0">
+            <h1 className="text-3xl font-bold text-gray-900">
+              {title}
+            </h1>
+            <p className="mt-1 text-sm text-gray-500">
+              {description}
+            </p>
           </div>
-        </motion.div>
-
-        <div className="mt-12 flex flex-col items-center justify-center bg-white p-12 rounded-lg shadow-md">
-          <Construction className="h-20 w-20 text-indigo-400 mb-6" />
-          <h2 className="text-2xl font-bold text-gray-800 mb-2">Coming Soon</h2>
-          <p className="text-gray-600 text-center max-w-md mb-8">
-            We're working hard to bring this feature to life. Check back soon for updates!
-          </p>
-          <div className="w-full max-w-md h-4 bg-gray-200 rounded-full overflow-hidden">
-            <div className="h-full bg-indigo-500 rounded-full" style={{ width: '65%' }}></div>
-          </div>
-          <p className="mt-2 text-sm text-gray-500">Development Progress: 65%</p>
         </div>
+      </motion.div>
+
+      <div className="mt-12 flex flex-col items-center justify-center bg-white p-12 rounded-lg shadow-md">
+        <Construction className="h-20 w-20 text-indigo-400 mb-6" />
+        <h2 className="text-2xl font-bold text-gray-800 mb-2">Coming Soon</h2>
+        <p className="text-gray-600 text-center max-w-md mb-8">
+          We're working hard to bring this feature to life. Check back soon for updates!
+        </p>
+        <div className="w-full max-w-md h-4 bg-gray-200 rounded-full overflow-hidden">
+          <div 
+            className="h-full bg-indigo-500 rounded-full" 
+            style={{ width: `${progress}%` }}
+          ></div>
+        </div>
+        <p className="mt-2 text-sm text-gray-500">Development Progress: {progress}%</p>
+        
+        {action && (
+          <button
+            onClick={action.onClick}
+            className="mt-8 inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          >
+            {action.label}
+          </button>
+        )}
       </div>
     </div>
   );

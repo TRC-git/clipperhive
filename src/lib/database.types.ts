@@ -137,6 +137,38 @@ export interface Database {
           created_at?: string
         }
       }
+      project_invitations: {
+        Row: {
+          id: string
+          project_id: string
+          clipper_id: string
+          booker_id: string
+          status: 'pending' | 'accepted' | 'declined'
+          message: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          project_id: string
+          clipper_id: string
+          booker_id: string
+          status?: 'pending' | 'accepted' | 'declined'
+          message?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          project_id?: string
+          clipper_id?: string
+          booker_id?: string
+          status?: 'pending' | 'accepted' | 'declined'
+          message?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+      }
     }
     Views: {
       analytics: {

@@ -1,14 +1,31 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useAuth } from '../hooks/useAuth';
-import { Clock, DollarSign, TrendingUp, Search, ExternalLink } from 'lucide-react';
+import { Clock, DollarSign, TrendingUp, Search, ExternalLink, Plus } from 'lucide-react';
+import { cn } from "@/lib/utils";
+import BookmarkStar from '../components/BookmarkStar';
+import { useToast } from '@/hooks/use-toast';
 
-// Dummy marketplace projects data
+interface YouTubeChannel {
+  channel_id: string;
+  channel_name: string;
+  subscribers: number;
+  total_views: number;
+}
+
+// Add categories constant at the top of the file
+const CATEGORIES = {
+  projects: ['All', 'Gaming', 'Tech', 'Lifestyle', 'Education', 'Entertainment'],
+  clippers: ['All', 'Gaming Highlights', 'Lifestyle & Beauty', 'Viral Content', 'Tech Reviews', 'Educational']
+};
+
+// Update the dummy data to include categories
 const dummyMarketplaceProjects = [
   {
     id: '1a2b3c4d-5e6f-47a8-89b0-c1d2e3f4a5b6',
     booker_id: '82e07610-0e34-4dc6-b0c4-65b38f5d3d7a',
     title: 'Gaming Highlights Compilation',
+    category: 'Gaming',
     description: 'Looking for exciting gaming moments from popular streamers. Need 3-5 minute highlight reels focusing on epic plays and funny reactions.',
     budget: 1000.00,
     cpm_rate: 5.00,
@@ -24,6 +41,7 @@ const dummyMarketplaceProjects = [
     id: '4d5e6f7a-8b9c-40d1-a2e3-f4a5b6c7d8e9',
     booker_id: '937f9940-95b5-4c3a-8b68-3c2c2e05b6d9',
     title: 'Esports Highlights Compilation',
+    category: 'Gaming',
     description: 'Looking for high-energy clips from major esports tournaments. Focus on player reactions and game-changing moments. Need 5-7 minute compilations.',
     budget: 1800.00,
     cpm_rate: 7.50,
@@ -39,6 +57,7 @@ const dummyMarketplaceProjects = [
     id: '5e6f7a8b-9c0d-41e2-b3f4-a5b6c7d8e9f0',
     booker_id: '82e07610-0e34-4dc6-b0c4-65b38f5d3d7a',
     title: 'Product Review Shorts',
+    category: 'Tech',
     description: 'Need engaging 30-second clips highlighting key features of latest tech products. Focus on visually impressive transformations and reactions.',
     budget: 950.00,
     cpm_rate: 5.25,
@@ -54,6 +73,7 @@ const dummyMarketplaceProjects = [
     id: '6f7a8b9c-0d1e-42f3-a4b5-c6d7e8f9a0b1',
     booker_id: '8d2f45e7-7f1a-4d3b-9e5c-1c2d3e4f5a6b',
     title: 'Travel Vlog Highlights',
+    category: 'Lifestyle',
     description: 'Seeking captivating moments from travel content. Focus on breathtaking scenery, unique cultural experiences, and authentic reactions. 1-2 minute clips.',
     budget: 1500.00,
     cpm_rate: 6.75,
@@ -69,6 +89,7 @@ const dummyMarketplaceProjects = [
     id: '7b8c9d0e-1f2a-3b4c-d5e6-f7a8b9c0d1e2',
     booker_id: '937f9940-95b5-4c3a-8b68-3c2c2e05b6d9',
     title: 'Viral Moments in Sports',
+    category: 'Gaming',
     description: 'Looking for jaw-dropping sports moments from recent games and tournaments. Need clips that capture incredible athleticism, skill, and crowd reactions.',
     budget: 2200.00,
     cpm_rate: 8.50,
@@ -84,6 +105,7 @@ const dummyMarketplaceProjects = [
     id: '8c9d0e1f-2a3b-4c5d-e6f7-a8b9c0d1e2f3',
     booker_id: '8d2f45e7-7f1a-4d3b-9e5c-1c2d3e4f5a6b',
     title: 'Tech Unboxing Reactions',
+    category: 'Tech',
     description: 'Seeking genuine reaction clips from tech unboxing videos. Focus on first impressions, surprise moments, and detailed feature reveals.',
     budget: 1300.00,
     cpm_rate: 6.00,
@@ -97,16 +119,93 @@ const dummyMarketplaceProjects = [
   }
 ];
 
+// Update the MarketplaceClipper interface
+interface MarketplaceClipper {
+  id: string;
+  username: string;
+  profile_picture: string | null;
+  youtube_tokens: YouTubeChannel[];
+  role: string;
+  is_bookmarked?: boolean;
+  notes?: string;
+  specialty?: string;
+  rating?: number;
+  projects_completed?: number;
+  portfolio_url?: string;
+}
+
+// Combine dummy marketplace clippers with the existing ones
+const dummyMarketplaceClippers: MarketplaceClipper[] = [
+  {
+    id: "1",
+    username: "alexedits",
+    profile_picture: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=1974&auto=format&fit=crop",
+    specialty: "Gaming Highlights",
+    rating: 4.8,
+    projects_completed: 42,
+    youtube_tokens: [{
+      channel_id: "UC123",
+      channel_name: "Alex Edits",
+      subscribers: 45000,
+      total_views: 1000000
+    }],
+    role: "clipper",
+    portfolio_url: "/portfolio/alexedits"
+  },
+  {
+    id: "2",
+    username: "emmaclips",
+    profile_picture: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=1974&auto=format&fit=crop",
+    specialty: "Lifestyle & Beauty",
+    rating: 4.9,
+    projects_completed: 78,
+    youtube_tokens: [{
+      channel_id: "UC456",
+      channel_name: "Emma's Edits",
+      subscribers: 78000,
+      total_views: 2000000
+    }],
+    role: "clipper",
+    portfolio_url: "/portfolio/emmaclips"
+  },
+  {
+    id: "3",
+    username: "chrisviral",
+    profile_picture: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1974&auto=format&fit=crop",
+    specialty: "Viral Content",
+    rating: 4.95,
+    projects_completed: 156,
+    youtube_tokens: [{
+      channel_id: "UC789",
+      channel_name: "Chris Viral",
+      subscribers: 125000,
+      total_views: 5000000
+    }],
+    role: "clipper",
+    portfolio_url: "/portfolio/chrisviral"
+  }
+];
+
 const MarketplacePage = () => {
-  const [projects, setProjects] = useState([]);
+  const [projects, setProjects] = useState<typeof dummyMarketplaceProjects>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState('all');
+  const [categoryFilter, setCategoryFilter] = useState('All');
   const { user } = useAuth();
+  const { toast } = useToast();
+  const [viewMode, setViewMode] = useState<'projects' | 'clippers'>('projects');
+  const [clippers, setClippers] = useState<MarketplaceClipper[]>([]);
+  const [directory, setDirectory] = useState<string[]>([]);
+  const [bookmarks, setBookmarks] = useState<string[]>([]);
 
   useEffect(() => {
     fetchProjects();
-  }, []);
+    fetchClippers();
+    if (user) {
+      loadDirectory();
+      loadBookmarks();
+    }
+  }, [user]);
 
   const fetchProjects = async () => {
     try {
@@ -123,93 +222,232 @@ const MarketplacePage = () => {
     }
   };
 
+  const fetchClippers = async () => {
+    try {
+      setLoading(true);
+      // In a real app, fetch from API
+      // For now, combine dummy data
+      setClippers(dummyMarketplaceClippers);
+    } catch (err) {
+      console.error('Error fetching clippers:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const loadDirectory = () => {
+    try {
+      const savedDirectory = localStorage.getItem('clipper_directory');
+      if (savedDirectory) {
+        setDirectory(JSON.parse(savedDirectory));
+      }
+    } catch (err) {
+      console.error('Error loading directory:', err);
+    }
+  };
+
+  const loadBookmarks = () => {
+    try {
+      const savedBookmarks = localStorage.getItem('clipper_bookmarks');
+      if (savedBookmarks) {
+        setBookmarks(JSON.parse(savedBookmarks));
+      }
+    } catch (err) {
+      console.error('Error loading bookmarks:', err);
+    }
+  };
+
+  const handleAddToDirectory = async (clipper: MarketplaceClipper) => {
+    if (!user) {
+      toast({
+        title: "Authentication Required",
+        description: "Please sign in to add clippers to your directory.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      // Check if clipper is already in directory
+      const isInDirectory = directory.includes(clipper.id);
+      let newDirectory: string[];
+
+      if (isInDirectory) {
+        // Remove from directory
+        newDirectory = directory.filter(id => id !== clipper.id);
+        toast({
+          title: "Removed from Directory",
+          description: `${clipper.username} has been removed from your directory.`,
+        });
+      } else {
+        // Add to directory
+        newDirectory = [...directory, clipper.id];
+        toast({
+          title: "Added to Directory",
+          description: `${clipper.username} has been added to your directory.`,
+        });
+      }
+
+      // Update localStorage and state
+      localStorage.setItem('clipper_directory', JSON.stringify(newDirectory));
+      setDirectory(newDirectory);
+
+    } catch (error) {
+      console.error('Error updating directory:', error);
+      toast({
+        title: "Error",
+        description: "Failed to update directory.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleContactClipper = (clipper: MarketplaceClipper) => {
+    if (!user) {
+      toast({
+        title: "Authentication Required",
+        description: "Please sign in to contact clippers.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Implement contact functionality
+    toast({
+      title: "Contact Request Sent",
+      description: `A message has been sent to ${clipper.username}.`,
+    });
+  };
+
+  const handleToggleBookmark = async (clipper: MarketplaceClipper) => {
+    if (!user) {
+      toast({
+        title: "Authentication Required",
+        description: "Please sign in to bookmark clippers.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      const isBookmarked = bookmarks.includes(clipper.id);
+      let newBookmarks: string[];
+
+      if (isBookmarked) {
+        newBookmarks = bookmarks.filter(id => id !== clipper.id);
+        toast({
+          title: "Bookmark Removed",
+          description: `${clipper.username} has been removed from your bookmarks.`,
+        });
+      } else {
+        newBookmarks = [...bookmarks, clipper.id];
+        toast({
+          title: "Bookmark Added",
+          description: `${clipper.username} has been bookmarked.`,
+        });
+      }
+
+      localStorage.setItem('clipper_bookmarks', JSON.stringify(newBookmarks));
+      setBookmarks(newBookmarks);
+
+    } catch (error) {
+      console.error('Error updating bookmarks:', error);
+      toast({
+        title: "Error",
+        description: "Failed to update bookmark.",
+        variant: "destructive",
+      });
+    }
+  };
+
   const filteredProjects = projects.filter(project => 
-    (searchTerm === '' || 
-     project.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-     project.description.toLowerCase().includes(searchTerm.toLowerCase())) &&
-    (categoryFilter === 'all' || 
-     (categoryFilter === 'gaming' && project.title.toLowerCase().includes('gaming')) ||
-     (categoryFilter === 'tech' && project.title.toLowerCase().includes('tech')) ||
-     (categoryFilter === 'lifestyle' && 
-      (project.title.toLowerCase().includes('travel') || 
-       project.title.toLowerCase().includes('cooking') || 
-       project.title.toLowerCase().includes('life'))))
+    searchTerm === '' || 
+    project.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    project.description.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const filteredClippers = clippers.filter(clipper =>
+    clipper.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (clipper.specialty && clipper.specialty.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
   return (
     <div className="bg-gray-50 min-h-[calc(100vh-4rem)]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="flex flex-col md:flex-row md:items-center md:justify-between"
-        >
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">Project Marketplace</h1>
-            <p className="mt-1 text-sm text-gray-500">
-              Browse available projects and submit your clips
-            </p>
+        {/* Header with Toggle */}
+        <div className="flex flex-col items-center mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-4">Marketplace</h1>
+          
+          <div className="flex items-center space-x-2 bg-gray-200 p-1 rounded-lg">
+            <button
+              onClick={() => setViewMode('projects')}
+              className={cn(
+                "px-4 py-2 rounded-md text-sm font-medium transition-colors",
+                viewMode === 'projects' 
+                  ? "bg-white text-gray-900 shadow"
+                  : "text-gray-600 hover:text-gray-900"
+              )}
+            >
+              Browse Projects
+            </button>
+            <button
+              onClick={() => setViewMode('clippers')}
+              className={cn(
+                "px-4 py-2 rounded-md text-sm font-medium transition-colors",
+                viewMode === 'clippers'
+                  ? "bg-white text-gray-900 shadow"
+                  : "text-gray-600 hover:text-gray-900"
+              )}
+            >
+              Find Clippers
+            </button>
           </div>
-          <div className="mt-4 md:mt-0">
-            <div className="relative rounded-md shadow-sm max-w-xs">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Search className="h-5 w-5 text-gray-400" />
-              </div>
-              <input
-                type="text"
-                className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md"
-                placeholder="Search projects"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-            </div>
-          </div>
-        </motion.div>
-        
-        {/* Category filters */}
-        <div className="flex flex-wrap gap-2 mt-6">
-          <button
-            onClick={() => setCategoryFilter('all')}
-            className={`px-4 py-2 rounded-full text-sm font-medium ${
-              categoryFilter === 'all' 
-                ? 'bg-indigo-600 text-white' 
-                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-            }`}
-          >
-            All Projects
-          </button>
-          <button
-            onClick={() => setCategoryFilter('gaming')}
-            className={`px-4 py-2 rounded-full text-sm font-medium ${
-              categoryFilter === 'gaming' 
-                ? 'bg-indigo-600 text-white' 
-                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-            }`}
-          >
-            Gaming
-          </button>
-          <button
-            onClick={() => setCategoryFilter('tech')}
-            className={`px-4 py-2 rounded-full text-sm font-medium ${
-              categoryFilter === 'tech' 
-                ? 'bg-indigo-600 text-white' 
-                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-            }`}
-          >
-            Tech
-          </button>
-          <button
-            onClick={() => setCategoryFilter('lifestyle')}
-            className={`px-4 py-2 rounded-full text-sm font-medium ${
-              categoryFilter === 'lifestyle' 
-                ? 'bg-indigo-600 text-white' 
-                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-            }`}
-          >
-            Lifestyle
-          </button>
         </div>
 
+        {/* Search and Category Filter */}
+        <div className="flex justify-between items-center mb-6">
+          <div className="flex-1">
+            <div className="flex items-center space-x-4">
+              <div className="relative max-w-xs">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Search className="h-5 w-5 text-gray-400" />
+                </div>
+                <input
+                  type="text"
+                  className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  placeholder={viewMode === 'projects' ? "Search projects..." : "Search clippers..."}
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+              </div>
+              <select
+                value={categoryFilter}
+                onChange={(e) => setCategoryFilter(e.target.value)}
+                className="block w-48 pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+              >
+                {CATEGORIES[viewMode === 'projects' ? 'projects' : 'clippers'].map((category) => (
+                  <option key={category} value={category}>{category}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+          
+          {user && (
+            <div className="ml-4">
+              {viewMode === 'projects' && user.role === 'booker' && (
+                <a
+                  href="/projects/create"
+                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700"
+                >
+                  <Plus className="h-5 w-5 mr-2" />
+                  List Your Project
+                </a>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Content */}
         {loading ? (
           <div className="flex items-center justify-center h-64">
             <svg
@@ -233,44 +471,121 @@ const MarketplacePage = () => {
               ></path>
             </svg>
           </div>
+        ) : viewMode === 'projects' ? (
+          // Projects View
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {filteredProjects.map((project) => (
+              <ProjectCard key={project.id} project={project} user={user} />
+            ))}
+          </div>
         ) : (
-          <>
-            {filteredProjects.length === 0 ? (
-              <div className="mt-12 text-center">
-                <svg
-                  className="mx-auto h-12 w-12 text-gray-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                  ></path>
-                </svg>
-                <h3 className="mt-2 text-sm font-medium text-gray-900">No projects found</h3>
-                <p className="mt-1 text-sm text-gray-500">
-                  {searchTerm || categoryFilter !== 'all' ? "Try adjusting your search criteria." : "Check back later for new opportunities."}
-                </p>
+          // Clippers View
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {filteredClippers.map((clipper) => (
+              <div key={clipper.id} className="bg-white overflow-hidden shadow rounded-lg border border-gray-200">
+                <div className="p-5">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center">
+                      {clipper.profile_picture ? (
+                        <img
+                          className="h-12 w-12 rounded-full object-cover"
+                          src={clipper.profile_picture}
+                          alt={clipper.username}
+                        />
+                      ) : (
+                        <div className="h-12 w-12 rounded-full bg-indigo-100 flex items-center justify-center">
+                          <span className="text-lg font-medium text-indigo-600">
+                            {clipper.username.charAt(0).toUpperCase()}
+                          </span>
+                        </div>
+                      )}
+                      
+                      <div className="ml-4">
+                        <h3 className="text-lg font-medium text-gray-900">{clipper.username}</h3>
+                        <div className="mt-1 flex items-center text-sm text-gray-500">
+                          <span>{clipper.specialty}</span>
+                          {clipper.rating && (
+                            <>
+                              <span className="mx-1">•</span>
+                              <span>{clipper.rating} ★</span>
+                            </>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    <BookmarkStar
+                      clipperId={clipper.id}
+                      initialIsBookmarked={bookmarks.includes(clipper.id)}
+                      onToggle={() => handleToggleBookmark(clipper)}
+                      isNested={true}
+                    />
+                  </div>
+
+                  <div className="mt-4">
+                    <div className="grid grid-cols-2 gap-4 mb-4">
+                      <div className="bg-gray-50 p-3 rounded-lg text-center">
+                        <p className="text-sm text-gray-500">Subscribers</p>
+                        <p className="text-lg font-semibold text-gray-900">
+                          {clipper.youtube_tokens?.[0]?.subscribers?.toLocaleString() || '0'}
+                        </p>
+                      </div>
+                      <div className="bg-gray-50 p-3 rounded-lg text-center">
+                        <p className="text-sm text-gray-500">Projects</p>
+                        <p className="text-lg font-semibold text-gray-900">
+                          {clipper.projects_completed || '0'}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="mb-4">
+                      <a
+                        href={clipper.portfolio_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center text-sm text-indigo-600 hover:text-indigo-900"
+                      >
+                        View Portfolio
+                        <ExternalLink className="h-4 w-4 ml-1" />
+                      </a>
+                    </div>
+
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => handleAddToDirectory(clipper)}
+                        className={cn(
+                          "flex-1 inline-flex justify-center items-center px-3 py-2 border shadow-sm text-sm font-medium rounded-md",
+                          directory.includes(clipper.id)
+                            ? "border-red-300 text-red-700 bg-red-50 hover:bg-red-100"
+                            : "border-gray-300 text-gray-700 bg-white hover:bg-gray-50"
+                        )}
+                      >
+                        {directory.includes(clipper.id) ? 'Remove from Directory' : 'Add to Directory'}
+                      </button>
+                      <button
+                        onClick={() => handleContactClipper(clipper)}
+                        className="flex-1 inline-flex justify-center items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
+                      >
+                        Contact
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </div>
-            ) : (
-              <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {filteredProjects.map((project) => (
-                  <ProjectCard key={project.id} project={project} user={user} />
-                ))}
-              </div>
-            )}
-          </>
+            ))}
+          </div>
         )}
       </div>
     </div>
   );
 };
 
-const ProjectCard = ({ project, user }) => {
+interface ProjectCardProps {
+  project: typeof dummyMarketplaceProjects[0];
+  user: { id: string; role?: string } | null;
+}
+
+const ProjectCard = ({ project, user }: ProjectCardProps) => {
   // Format created date
   const createdDate = new Date(project.created_at);
   const formattedDate = createdDate.toLocaleDateString('en-US', {
@@ -365,7 +680,7 @@ const ProjectCard = ({ project, user }) => {
           </button>
         ) : (
           <span className="text-xs text-gray-500">
-            {!user ? "Login to submit" : user.role !== 'clipper' ? "Bookers can't submit" : "Your project"}
+            {!user ? "Login to submit" : user.role !== 'clipper' ? "Brands can't submit" : "Your project"}
           </span>
         )}
       </div>

@@ -114,8 +114,23 @@ const mockUsers = {
 // Flatten the mock users for easier searching
 const allMockUsers = [...mockUsers.bookers, ...mockUsers.clippers];
 
+interface User {
+  id: string;
+  email: string;
+  username: string;
+  role: 'booker' | 'clipper';
+  profile_picture: string | null;
+  youtube_tokens: Array<{
+    channel_id: string;
+    channel_name: string;
+    subscribers: number;
+    total_views: number;
+    videos_count: number;
+  }>;
+}
+
 export function useAuth() {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [sessionLoading, setSessionLoading] = useState(true);
   const navigate = useNavigate();
@@ -131,14 +146,14 @@ export function useAuth() {
       
       setSessionLoading(false);
       setLoading(false);
-    }, 500);
+    }, 0);
     
     return () => clearTimeout(checkSession);
   }, []);
 
-  const signIn = async (email, password) => {
+  const signIn = async (email: string, password: string) => {
+    setLoading(true);
     try {
-      setLoading(true);
       // Simulate sign in with mock data
       await new Promise(resolve => setTimeout(resolve, 800));
       
@@ -146,23 +161,29 @@ export function useAuth() {
       const foundUser = allMockUsers.find(u => u.email.toLowerCase() === email.toLowerCase());
       
       if (foundUser && foundUser.password === password) {
-        setUser(foundUser);
+        const userWithoutPassword: User = {
+          id: foundUser.id,
+          email: foundUser.email,
+          username: foundUser.username,
+          role: foundUser.role as 'booker' | 'clipper',
+          profile_picture: foundUser.profile_picture,
+          youtube_tokens: foundUser.youtube_tokens
+        };
+        setUser(userWithoutPassword);
         // Save user to localStorage for session persistence
-        localStorage.setItem('clipperhive_user', JSON.stringify(foundUser));
+        localStorage.setItem('clipperhive_user', JSON.stringify(userWithoutPassword));
         navigate('/dashboard');
       } else {
         throw new Error('Invalid email or password');
       }
-    } catch (error) {
-      throw error;
     } finally {
       setLoading(false);
     }
   };
 
-  const signUp = async (email, password, username, role) => {
+  const signUp = async (email: string, password: string, username: string, role: 'booker' | 'clipper') => {
+    setLoading(true);
     try {
-      setLoading(true);
       // Simulate sign up with mock data
       await new Promise(resolve => setTimeout(resolve, 800));
       
@@ -171,10 +192,9 @@ export function useAuth() {
         throw new Error('Email already in use');
       }
       
-      const newUser = {
+      const newUser: User = {
         id: `mock-${Date.now()}`,
         email,
-        password,
         username,
         role,
         profile_picture: null,
@@ -185,24 +205,18 @@ export function useAuth() {
       // Save user to localStorage for session persistence
       localStorage.setItem('clipperhive_user', JSON.stringify(newUser));
       navigate('/dashboard');
-    } catch (error) {
-      throw error;
     } finally {
       setLoading(false);
     }
   };
 
   const signOut = async () => {
-    try {
-      // Simulate sign out
-      await new Promise(resolve => setTimeout(resolve, 300));
-      setUser(null);
-      // Remove user from localStorage
-      localStorage.removeItem('clipperhive_user');
-      navigate('/');
-    } catch (error) {
-      throw error;
-    }
+    // Simulate sign out
+    await new Promise(resolve => setTimeout(resolve, 300));
+    setUser(null);
+    // Remove user from localStorage
+    localStorage.removeItem('clipperhive_user');
+    navigate('/');
   };
 
   return {

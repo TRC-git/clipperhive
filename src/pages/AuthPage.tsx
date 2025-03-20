@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, FormEvent } from 'react';
 import { motion } from 'framer-motion';
 import { useAuth } from '../hooks/useAuth';
 import { Info } from 'lucide-react';
@@ -22,14 +22,14 @@ const AuthPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [username, setUsername] = useState('');
-  const [role, setRole] = useState('booker');
+  const [role, setRole] = useState<'booker' | 'clipper'>('booker');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [showTestUsers, setShowTestUsers] = useState(true);
 
   const { signIn, signUp } = useAuth();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError('');
     setLoading(true);
@@ -51,7 +51,7 @@ const AuthPage = () => {
     }
   };
 
-  const fillTestUser = (user) => {
+  const fillTestUser = (user: { email: string; password: string; username: string }) => {
     setEmail(user.email);
     setPassword(user.password);
     if (!isLogin) {
@@ -202,7 +202,7 @@ const AuthPage = () => {
                   id="role"
                   name="role"
                   value={role}
-                  onChange={(e) => setRole(e.target.value)}
+                  onChange={(e) => setRole(e.target.value as 'booker' | 'clipper')}
                   className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
                 >
                   <option value="booker">Book Content (I'm a Brand)</option>

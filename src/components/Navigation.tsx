@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
-  Home, 
   LayoutDashboard, 
   ShoppingBag, 
   LogIn, 
@@ -14,14 +13,24 @@ import {
   Briefcase,
   Video
 } from 'lucide-react';
-import { useAuth } from '../hooks/useAuth';
+import { useAuthContext } from '../providers/AuthProvider';
+
+interface User {
+  id: string;
+  username: string;
+  email: string;
+  role: 'booker' | 'clipper';
+}
 
 const Navigation = () => {
-  const { user, signOut, loading } = useAuth();
+  const { user, signOut, loading } = useAuthContext();
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   
-  const isActive = (path) => {
+  const isActive = (path: string) => {
+    if (path === '/projects' && location.pathname.startsWith('/projects/')) {
+      return true;
+    }
     return location.pathname === path;
   };
   
@@ -30,9 +39,16 @@ const Navigation = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex">
-            <Link to="/" className="flex items-center px-2 py-2 text-gray-900 hover:text-indigo-600">
-              <Home className="h-5 w-5 mr-1" />
-              <span className="font-semibold">ClipperHive</span>
+            <Link 
+              to="/" 
+              className="flex items-center space-x-2 transition-opacity duration-200 hover:opacity-80"
+            >
+              <div className="hexagon bg-honey-500 w-8 h-7 flex items-center justify-center">
+                <span className="text-charcoal-800 font-bold text-sm">CH</span>
+              </div>
+              <span className="font-display font-bold text-xl text-charcoal-800 dark:text-white">
+                ClipperHive
+              </span>
             </Link>
             
             <div className="hidden md:ml-6 md:flex md:space-x-4">
@@ -78,7 +94,7 @@ const Navigation = () => {
                         }`}
                       >
                         <Users className="h-5 w-5 mr-1" />
-                        <span>Clippers</span>
+                        <span>My Clippers</span>
                       </Link>
                     </>
                   )}
@@ -116,9 +132,9 @@ const Navigation = () => {
               user ? (
                 <>
                   <Link
-                    to="/profile"
+                    to="/channels"
                     className={`flex items-center px-3 py-2 ${
-                      isActive('/profile') ? 'text-indigo-600 border-b-2 border-indigo-600' : 'text-gray-700 hover:text-indigo-600'
+                      isActive('/channels') ? 'text-indigo-600 border-b-2 border-indigo-600' : 'text-gray-700 hover:text-indigo-600'
                     }`}
                   >
                     <Film className="h-5 w-5 mr-1" />
@@ -274,9 +290,9 @@ const Navigation = () => {
                 )}
                 
                 <Link
-                  to="/profile"
+                  to="/channels"
                   className={`flex items-center px-3 py-2 rounded-md ${
-                    isActive('/profile') ? 'bg-indigo-100 text-indigo-600' : 'text-gray-700 hover:bg-gray-100'
+                    isActive('/channels') ? 'bg-indigo-100 text-indigo-600' : 'text-gray-700 hover:bg-gray-100'
                   }`}
                   onClick={() => setMobileMenuOpen(false)}
                 >

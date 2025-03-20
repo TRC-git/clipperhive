@@ -45,6 +45,15 @@ CREATE TABLE IF NOT EXISTS projects (
   updated_at timestamptz DEFAULT now()
 );
 
+-- Project bookmarks table
+CREATE TABLE IF NOT EXISTS project_bookmarks (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  project_id uuid REFERENCES projects(id) ON DELETE CASCADE,
+  user_id uuid REFERENCES users(id) ON DELETE CASCADE,
+  created_at timestamptz DEFAULT now(),
+  UNIQUE(project_id, user_id)
+);
+
 -- Clips table
 CREATE TABLE IF NOT EXISTS clips (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -64,12 +73,12 @@ CREATE TABLE IF NOT EXISTS transactions (
   project_id uuid REFERENCES projects(id) ON DELETE SET NULL,
   amount numeric NOT NULL,
   transaction_type transaction_type NOT NULL,
-  stripe_transaction_id text,
+  stripe_transaction_id text UNIQUE,
   created_at timestamptz DEFAULT now()
 );
 
--- Analytics materialized view
-CREATE MATERIALIZED VIEW analytics AS
+-- Create analytics view
+CREATE OR REPLACE VIEW analytics AS
 SELECT 
   c.id as clip_id,
   c.project_id,
@@ -80,8 +89,7 @@ SELECT
   p.cpm_rate,
   p.budget
 FROM clips c
-JOIN projects p ON c.project_id = p.id
-WHERE c.status = 'approved';
+LEFT JOIN projects p ON c.project_id = p.id;
 
 -- Create indexes
 CREATE INDEX idx_projects_created_at ON projects(created_at);
@@ -93,6 +101,7 @@ ALTER TABLE users ENABLE ROW LEVEL SECURITY;
 ALTER TABLE projects ENABLE ROW LEVEL SECURITY;
 ALTER TABLE clips ENABLE ROW LEVEL SECURITY;
 ALTER TABLE transactions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE project_bookmarks ENABLE ROW LEVEL SECURITY;
 
 -- RLS Policies
 
@@ -166,3 +175,52 @@ CREATE TRIGGER update_clips_updated_at
   BEFORE UPDATE ON clips
   FOR EACH ROW
   EXECUTE FUNCTION update_updated_at();
+
+-- New policies
+CREATE POLICY "Bookers can create projects"
+  ON projects FOR INSERT
+  WITH CHECK (auth.uid() = booker_id);
+
+CREATE POLICY "Bookers can view their own projects"
+  ON projects FOR SELECT
+  USING (auth.uid() = booker_id);
+
+CREATE POLICY "Bookers can update their own projects"
+  ON projects FOR UPDATE
+  USING (auth.uid() = booker_id);
+
+CREATE POLICY "Clippers can view all projects"
+  ON projects FOR SELECT
+  USING (EXISTS (
+    SELECT 1 FROM users
+    WHERE id = auth.uid()
+    AND role = 'clipper'
+  ));
+
+CREATE POLICY "Clippers can create clips"
+  ON clips FOR INSERT
+  WITH CHECK (auth.uid() = clipper_id);
+
+CREATE POLICY "Users can view their own clips"
+  ON clips FOR SELECT
+  USING (auth.uid() = clipper_id OR EXISTS (
+    SELECT 1 FROM projects
+    WHERE projects.id = clips.project_id
+    AND projects.booker_id = auth.uid()
+  ));
+
+CREATE POLICY "Users can update their own clips"
+  ON clips FOR UPDATE
+  USING (auth.uid() = clipper_id);
+
+CREATE POLICY "Users can bookmark projects"
+  ON project_bookmarks FOR INSERT
+  WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Users can view their project bookmarks"
+  ON project_bookmarks FOR SELECT
+  USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can delete their project bookmarks"
+  ON project_bookmarks FOR DELETE
+  USING (auth.uid() = user_id);
