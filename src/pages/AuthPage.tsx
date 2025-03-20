@@ -2,6 +2,7 @@ import React, { useState, FormEvent } from 'react';
 import { motion } from 'framer-motion';
 import { useAuth } from '../hooks/useAuth';
 import { Info } from 'lucide-react';
+import { useLocation, Location } from 'react-router-dom';
 
 // Test user credentials
 const TEST_USERS = {
@@ -17,6 +18,10 @@ const TEST_USERS = {
   ]
 };
 
+interface LocationState {
+  from: Location;
+}
+
 const AuthPage = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
@@ -27,7 +32,21 @@ const AuthPage = () => {
   const [loading, setLoading] = useState(false);
   const [showTestUsers, setShowTestUsers] = useState(true);
 
-  const { signIn, signUp } = useAuth();
+  const { signIn, signUp, user, loading: authLoading } = useAuth();
+  const location = useLocation();
+
+  // If we're loading auth state, show nothing to prevent flicker
+  if (authLoading) {
+    return null;
+  }
+
+  // If user is already authenticated, don't show auth page
+  if (user) {
+    const state = location.state as LocationState | null;
+    const from = state?.from?.pathname || '/dashboard';
+    window.location.href = from;
+    return null;
+  }
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -36,12 +55,18 @@ const AuthPage = () => {
 
     try {
       if (isLogin) {
-        await signIn(email, password);
+        console.log('Attempting login...');
+        const state = location.state as LocationState | null;
+        const from = state?.from?.pathname || '/dashboard';
+        await signIn(email, password, from);
+        console.log('Login successful');
       } else {
         if (!username) {
           throw new Error('Username is required');
         }
+        console.log('Attempting signup...');
         await signUp(email, password, username, role);
+        console.log('Signup successful');
       }
     } catch (err) {
       console.error("Authentication error:", err);
