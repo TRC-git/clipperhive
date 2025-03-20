@@ -44,13 +44,26 @@ const AppContent = () => {
   const location = useLocation();
   const { user, loading } = useAuthContext();
   
-  // Check if the current path is an authenticated route or starts with /projects/
-  const isAuthenticatedRoute = user ? 
-    (authenticatedRoutes.includes(location.pathname) || location.pathname.startsWith('/projects/')) : 
-    false;
+  // Define public routes that should always show the NavBar
+  const publicRoutes = [
+    '/',
+    '/how-it-works',
+    '/pricing',
+    '/about',
+    '/faq',
+    '/blog',
+    '/careers',
+    '/contact',
+    '/legal',
+    '/terms',
+    '/cookies'
+  ];
 
-  // For logged in users, force authenticated navigation on all routes
-  const showAuthenticatedNav = user ? true : isAuthenticatedRoute;
+  // Check if the current path is an authenticated route or starts with /projects/
+  const isAuthenticatedRoute = authenticatedRoutes.includes(location.pathname) || location.pathname.startsWith('/projects/');
+  
+  // Show NavBar on public routes, Navigation on authenticated routes
+  const showAuthenticatedNav = !publicRoutes.includes(location.pathname) && (user || isAuthenticatedRoute);
 
   // Add this to reset bookmarks on application start (for testing)
   useEffect(() => {
