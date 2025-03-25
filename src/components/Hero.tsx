@@ -53,11 +53,11 @@ const Hero: React.FC = () => {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
-            <Link to="/register?type=brand" className="brand-button group py-3 px-8 text-base font-medium">
+            <Link to="/marketplace?tab=clippers" className="brand-button group py-3 px-8 text-base font-medium">
               I'm a Brand
               <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
             </Link>
-            <Link to="/register?type=clipper" className="secondary-button group py-3 px-8 text-base font-medium">
+            <Link to="/marketplace?tab=brands" className="secondary-button group py-3 px-8 text-base font-medium">
               I'm a Clipper
               <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
             </Link>

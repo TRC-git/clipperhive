@@ -76,7 +76,7 @@ const ForClippers: React.FC = () => {
               </ul>
               
               <Link 
-                to="/register?type=clipper" 
+                to="/clipper-signup" 
                 className="secondary-button group inline-flex items-center"
               >
                 Join as a Clipper
@@ -94,9 +94,9 @@ const ForClippers: React.FC = () => {
           
           {/* Right side - Cards (now left side visually) */}
           <div className="lg:w-1/2">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 animate-on-scroll" style={{ transitionDelay: '200ms' }}>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 animate-on-scroll lg:mr-8" style={{ transitionDelay: '200ms' }}>
               {/* Card 1 */}
-              <div className="bg-white dark:bg-charcoal-700 rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1">
+              <div className="bg-white dark:bg-charcoal-700 rounded-xl p-6 shadow-[0_10px_30px_rgba(0,0,0,0.25)] hover:shadow-[0_15px_40px_rgba(0,0,0,0.25)] transition-all duration-300 hover:-translate-y-1">
                 <div className="flex items-center justify-center w-12 h-12 rounded-full bg-honey-100 dark:bg-charcoal-600 mb-4">
                   <Video className="h-6 w-6 text-honey-500 dark:text-honey-400" />
                 </div>
@@ -107,7 +107,7 @@ const ForClippers: React.FC = () => {
               </div>
               
               {/* Card 2 */}
-              <div className="bg-white dark:bg-charcoal-700 rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1">
+              <div className="bg-white dark:bg-charcoal-700 rounded-xl p-6 shadow-[0_10px_30px_rgba(0,0,0,0.25)] hover:shadow-[0_15px_40px_rgba(0,0,0,0.25)] transition-all duration-300 hover:-translate-y-1">
                 <div className="flex items-center justify-center w-12 h-12 rounded-full bg-honey-100 dark:bg-charcoal-600 mb-4">
                   <DollarSign className="h-6 w-6 text-honey-500 dark:text-honey-400" />
                 </div>
@@ -118,7 +118,7 @@ const ForClippers: React.FC = () => {
               </div>
               
               {/* Card 3 */}
-              <div className="bg-white dark:bg-charcoal-700 rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1">
+              <div className="bg-white dark:bg-charcoal-700 rounded-xl p-6 shadow-[0_10px_30px_rgba(0,0,0,0.25)] hover:shadow-[0_15px_40px_rgba(0,0,0,0.25)] transition-all duration-300 hover:-translate-y-1">
                 <div className="flex items-center justify-center w-12 h-12 rounded-full bg-honey-100 dark:bg-charcoal-600 mb-4">
                   <Calendar className="h-6 w-6 text-honey-500 dark:text-honey-400" />
                 </div>
@@ -129,7 +129,7 @@ const ForClippers: React.FC = () => {
               </div>
               
               {/* Card 4 */}
-              <div className="bg-white dark:bg-charcoal-700 rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1">
+              <div className="bg-white dark:bg-charcoal-700 rounded-xl p-6 shadow-[0_10px_30px_rgba(0,0,0,0.25)] hover:shadow-[0_15px_40px_rgba(0,0,0,0.25)] transition-all duration-300 hover:-translate-y-1">
                 <div className="flex items-center justify-center w-12 h-12 rounded-full bg-honey-100 dark:bg-charcoal-600 mb-4">
                   <Star className="h-6 w-6 text-honey-500 dark:text-honey-400" />
                 </div>

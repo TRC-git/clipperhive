@@ -228,9 +228,140 @@ const HowItWorks: React.FC = () => {
           </div>
           
           <div className="relative">
-            {/* Timeline circles and lines - similar structure as brands but with different content */}
-            {/* ... Similar step structure as the brands section but with clipper-specific content ... */}
-            {/* I won't duplicate the entire structure, but it would mirror the brand section with clipper-focused content */}
+            {/* Timeline Line */}
+            <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-0.5 bg-honey-200 dark:bg-charcoal-700 -translate-x-1/2"></div>
+            
+            {/* Step 1 */}
+            <div className="flex flex-col md:flex-row items-center mb-16 md:mb-24 relative">
+              <div className="md:w-1/2 md:pr-12 mb-8 md:mb-0 text-right animate-on-scroll">
+                <h3 className="text-2xl font-bold mb-3 text-charcoal-800 dark:text-white">Create Your Profile</h3>
+                <p className="text-charcoal-600 dark:text-charcoal-300">
+                  Set up your professional clipper profile, showcase your best work, and highlight your expertise in specific platforms and niches.
+                </p>
+              </div>
+              
+              <div className="z-10 flex items-center justify-center bg-honey-500 w-14 h-14 rounded-full shadow-md animate-on-scroll">
+                <Upload className="h-6 w-6 text-white" />
+              </div>
+              
+              <div className="md:w-1/2 md:pl-12 animate-on-scroll">
+                <div className="bg-honey-50 dark:bg-charcoal-800 p-5 rounded-lg shadow-sm">
+                  <ul className="space-y-3">
+                    <li className="flex items-start">
+                      <CheckCircle className="h-5 w-5 text-honey-500 mr-2 mt-0.5" />
+                      <span>Upload your portfolio and sample clips</span>
+                    </li>
+                    <li className="flex items-start">
+                      <CheckCircle className="h-5 w-5 text-honey-500 mr-2 mt-0.5" />
+                      <span>Set your rates and availability</span>
+                    </li>
+                    <li className="flex items-start">
+                      <CheckCircle className="h-5 w-5 text-honey-500 mr-2 mt-0.5" />
+                      <span>Specify your platform specialties</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            
+            {/* Step 2 */}
+            <div className="flex flex-col md:flex-row-reverse items-center mb-16 md:mb-24 relative">
+              <div className="md:w-1/2 md:pl-12 mb-8 md:mb-0 animate-on-scroll">
+                <h3 className="text-2xl font-bold mb-3 text-charcoal-800 dark:text-white">Browse Projects</h3>
+                <p className="text-charcoal-600 dark:text-charcoal-300">
+                  Find projects that match your skills and interests, and submit proposals to brands you'd love to work with.
+                </p>
+              </div>
+              
+              <div className="z-10 flex items-center justify-center bg-honey-500 w-14 h-14 rounded-full shadow-md animate-on-scroll">
+                <Search className="h-6 w-6 text-white" />
+              </div>
+              
+              <div className="md:w-1/2 md:pr-12 text-right animate-on-scroll">
+                <div className="bg-honey-50 dark:bg-charcoal-800 p-5 rounded-lg shadow-sm">
+                  <ul className="space-y-3">
+                    <li className="flex items-start justify-end">
+                      <span>Filter projects by platform and requirements</span>
+                      <CheckCircle className="h-5 w-5 text-honey-500 ml-2 mt-0.5" />
+                    </li>
+                    <li className="flex items-start justify-end">
+                      <span>Submit customized proposals to brands</span>
+                      <CheckCircle className="h-5 w-5 text-honey-500 ml-2 mt-0.5" />
+                    </li>
+                    <li className="flex items-start justify-end">
+                      <span>Set clear expectations and timelines</span>
+                      <CheckCircle className="h-5 w-5 text-honey-500 ml-2 mt-0.5" />
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            
+            {/* Step 3 */}
+            <div className="flex flex-col md:flex-row items-center mb-16 md:mb-24 relative">
+              <div className="md:w-1/2 md:pr-12 mb-8 md:mb-0 text-right animate-on-scroll">
+                <h3 className="text-2xl font-bold mb-3 text-charcoal-800 dark:text-white">Deliver Quality Work</h3>
+                <p className="text-charcoal-600 dark:text-charcoal-300">
+                  Create engaging short-form content that meets brand requirements and drives audience engagement.
+                </p>
+              </div>
+              
+              <div className="z-10 flex items-center justify-center bg-honey-500 w-14 h-14 rounded-full shadow-md animate-on-scroll">
+                <Calendar className="h-6 w-6 text-white" />
+              </div>
+              
+              <div className="md:w-1/2 md:pl-12 animate-on-scroll">
+                <div className="bg-honey-50 dark:bg-charcoal-800 p-5 rounded-lg shadow-sm">
+                  <ul className="space-y-3">
+                    <li className="flex items-start">
+                      <CheckCircle className="h-5 w-5 text-honey-500 mr-2 mt-0.5" />
+                      <span>Follow brand guidelines and requirements</span>
+                    </li>
+                    <li className="flex items-start">
+                      <CheckCircle className="h-5 w-5 text-honey-500 mr-2 mt-0.5" />
+                      <span>Optimize content for each platform</span>
+                    </li>
+                    <li className="flex items-start">
+                      <CheckCircle className="h-5 w-5 text-honey-500 mr-2 mt-0.5" />
+                      <span>Meet project deadlines consistently</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            
+            {/* Step 4 */}
+            <div className="flex flex-col md:flex-row-reverse items-center relative">
+              <div className="md:w-1/2 md:pl-12 mb-8 md:mb-0 animate-on-scroll">
+                <h3 className="text-2xl font-bold mb-3 text-charcoal-800 dark:text-white">Grow Your Business</h3>
+                <p className="text-charcoal-600 dark:text-charcoal-300">
+                  Build your reputation, earn great reviews, and develop long-term relationships with brands.
+                </p>
+              </div>
+              
+              <div className="z-10 flex items-center justify-center bg-honey-500 w-14 h-14 rounded-full shadow-md animate-on-scroll">
+                <DollarSign className="h-6 w-6 text-white" />
+              </div>
+              
+              <div className="md:w-1/2 md:pr-12 text-right animate-on-scroll">
+                <div className="bg-honey-50 dark:bg-charcoal-800 p-5 rounded-lg shadow-sm">
+                  <ul className="space-y-3">
+                    <li className="flex items-start justify-end">
+                      <span>Receive secure payments through escrow</span>
+                      <CheckCircle className="h-5 w-5 text-honey-500 ml-2 mt-0.5" />
+                    </li>
+                    <li className="flex items-start justify-end">
+                      <span>Collect testimonials and build reputation</span>
+                      <CheckCircle className="h-5 w-5 text-honey-500 ml-2 mt-0.5" />
+                    </li>
+                    <li className="flex items-start justify-end">
+                      <span>Establish recurring client relationships</span>
+                      <CheckCircle className="h-5 w-5 text-honey-500 ml-2 mt-0.5" />
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
           </div>
           
           <div className="mt-16 text-center animate-on-scroll">

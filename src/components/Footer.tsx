@@ -1,6 +1,7 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Mail, Instagram, Twitter, Linkedin, Youtube } from 'lucide-react';
+import { Mail, Instagram, Twitter, Linkedin, Youtube, MessageCircle, MessagesSquare } from 'lucide-react';
 
 const Footer: React.FC = () => {
   return (
@@ -34,6 +35,12 @@ const Footer: React.FC = () => {
                 </a>
                 <a href="#" className="text-charcoal-500 hover:text-honey-500 dark:text-charcoal-400 dark:hover:text-honey-400">
                   <Youtube className="h-5 w-5" />
+                </a>
+                <a href="#" className="text-charcoal-500 hover:text-honey-500 dark:text-charcoal-400 dark:hover:text-honey-400">
+                  <MessageCircle className="h-5 w-5" />
+                </a>
+                <a href="#" className="text-charcoal-500 hover:text-honey-500 dark:text-charcoal-400 dark:hover:text-honey-400">
+                  <MessagesSquare className="h-5 w-5" />
                 </a>
               </div>
             </div>

@@ -28,6 +28,15 @@ import ProjectDetailPage from './pages/ProjectDetailPage';
 import Terms from '@/pages/Terms';
 import Privacy from '@/pages/Privacy';
 import Cookies from '@/pages/Cookies';
+import Careers from "./pages/Careers";
+import CareerDetails from "./pages/CareerDetails";
+import Register from "./pages/Register";
+import Login from "./pages/Login";
+import BrandSignup from "./pages/BrandSignup";
+import ClipperSignup from "./pages/ClipperSignup";
+import BrandLogin from "./pages/BrandLogin";
+import ClipperLogin from "./pages/ClipperLogin";
+
 
 const queryClient = new QueryClient();
 
@@ -64,6 +73,17 @@ const RequireAuth = ({ children }: { children: JSX.Element }) => {
   return children;
 };
 
+// Add ScrollToTop component
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+  
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
+};
+
 const AppContent = () => {
   const location = useLocation();
   const { user } = useAuthContext();
@@ -81,7 +101,13 @@ const AppContent = () => {
     '/legal',
     '/terms',
     '/cookies',
-    '/auth'
+    '/auth',
+    '/register',
+    '/login',
+    '/brand-signup',
+    '/clipper-signup',
+    '/brand-login',
+    '/clipper-login'
   ];
 
   // Check if the current path is an authenticated route or starts with /projects/
@@ -114,8 +140,8 @@ const AppContent = () => {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      {/* Show Navigation for authenticated routes, NavBar for public routes */}
       {showAuthenticatedNav ? <Navigation /> : <NavBar />}
+      <ScrollToTop />
       <Routes>
         {/* Public routes */}
         <Route path="/" element={<Index />} />
@@ -128,10 +154,20 @@ const AppContent = () => {
         <Route path="/contact" element={<Contact />} />
         <Route path="/auth" element={<AuthPage />} />
         
+        {/* Auth routes */}
+        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/brand-signup" element={<BrandSignup />} />
+        <Route path="/clipper-signup" element={<ClipperSignup />} />
+        <Route path="/brand-login" element={<BrandLogin />} />
+        <Route path="/clipper-login" element={<ClipperLogin />} />
+        
         {/* Legal routes */}
         <Route path="/terms" element={<Terms />} />
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/cookies" element={<Cookies />} />
+        <Route path="/careers" element={<Careers />} />
+        <Route path="/careers/:id" element={<CareerDetails />} />
         
         {/* Protected routes */}
         <Route path="/dashboard" element={
@@ -187,6 +223,7 @@ const AppContent = () => {
     </div>
   );
 };
+
 
 const App = () => (
   <QueryClientProvider client={queryClient}>

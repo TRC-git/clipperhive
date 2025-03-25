@@ -9,6 +9,21 @@ export default {
         display: ['Montserrat', 'sans-serif'],
         sans: ['Open Sans', 'sans-serif'],
       },
+      keyframes: {
+        'honeycomb-shimmer': {
+          '0%': { opacity: '0.1' },
+          '50%': { opacity: '0.2' },
+          '100%': { opacity: '0.1' }
+        },
+        'fade-in': {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' }
+        }
+      },
+      animation: {
+        'honeycomb-shimmer': 'honeycomb-shimmer 3s ease-in-out infinite',
+        'fade-in': 'fade-in 0.5s ease-out forwards'
+      },
   		borderRadius: {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',

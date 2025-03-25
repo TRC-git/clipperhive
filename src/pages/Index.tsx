@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import NavBar from '@/components/NavBar';
 import Hero from '@/components/Hero';
 import Features from '@/components/Features';
 import ForBrands from '@/components/ForBrands';
@@ -6,7 +7,9 @@ import ForClippers from '@/components/ForClippers';
 import Footer from '@/components/Footer';
 import ClipShowcase from '@/components/ClipShowcase';
 import HoneycombBackground from '@/components/HoneycombBackground';
+import CountUpNumber from '@/components/CountUpNumber';
 import { TrendingUp, ArrowUpRight, LineChart } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Index: React.FC = () => {
   useEffect(() => {
@@ -37,6 +40,7 @@ const Index: React.FC = () => {
 
   return (
     <div className="min-h-screen">
+      <NavBar />
       <Hero />
       <Features />
       <ForBrands />
@@ -51,15 +55,17 @@ const Index: React.FC = () => {
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-20">
             {[
-              { number: '500+', label: 'Active Clippers' },
-              { number: '1,200+', label: 'Projects Completed' },
-              { number: '50M+', label: 'Views Generated' },
-              { number: '95%', label: 'Client Satisfaction' }
+              { number: 500, suffix: '+', label: 'Active Clippers' },
+              { number: 1200, suffix: '+', label: 'Projects Completed' },
+              { number: 50, suffix: 'M+', label: 'Views Generated' },
+              { number: 95, suffix: '%', label: 'Client Satisfaction' }
             ].map((stat, index) => (
               <div key={index} className="animate-on-scroll" style={{ transitionDelay: `${index * 100}ms` }}>
-                <div className="font-display font-bold text-4xl md:text-5xl text-honey-500 mb-2">
-                  {stat.number}
-                </div>
+                <CountUpNumber 
+                  end={stat.number} 
+                  suffix={stat.suffix}
+                  className="font-display font-bold text-4xl md:text-5xl text-honey-500 mb-2"
+                />
                 <p className="text-charcoal-600 dark:text-charcoal-300 text-lg">
                   {stat.label}
                 </p>
@@ -68,7 +74,7 @@ const Index: React.FC = () => {
           </div>
           
           {/* Growth Section with Honeycomb Background */}
-          <section className="relative py-16 mb-20 overflow-hidden rounded-3xl bg-honey-50 dark:bg-charcoal-800">
+          <section className="relative py-16 mb-20 overflow-hidden rounded-3xl bg-honey-50 dark:bg-charcoal-800 shadow-[0_10px_40px_rgba(0,0,0,0.2)]">
             <HoneycombBackground className="opacity-50" density="medium" animated={true} />
             
             <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-8 items-center max-w-5xl mx-auto px-4">
@@ -118,9 +124,9 @@ const Index: React.FC = () => {
                     </li>
                   ))}
                 </ul>
-                <a href="/register?type=creator" className="brand-button py-3 px-8 hover-lift">
+                <Link to="/register?type=creator" className="brand-button py-3 px-8 hover-lift">
                   Start Growing Today
-                </a>
+                </Link>
               </div>
             </div>
           </section>
@@ -133,7 +139,7 @@ const Index: React.FC = () => {
       {/* CTA Section */}
       <section className="section-padding bg-honey-50 dark:bg-charcoal-800">
         <div className="max-w-6xl mx-auto text-center">
-          <div className="bg-white dark:bg-charcoal-700 rounded-2xl p-8 md:p-12 shadow-sm border border-gray-100 dark:border-charcoal-600 animate-on-scroll">
+          <div className="bg-white dark:bg-charcoal-700 rounded-2xl p-8 md:p-12 shadow-[0_10px_40px_rgba(0,0,0,0.2)] border border-gray-100 dark:border-charcoal-600 animate-on-scroll">
             <h2 className="text-3xl md:text-4xl font-bold mb-4 text-charcoal-800 dark:text-white">
               Ready to transform your content strategy?
             </h2>
@@ -141,12 +147,12 @@ const Index: React.FC = () => {
               Join the ClipperHive community today and connect with the perfect match for your next viral video.
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4">
-              <a href="/register?type=brand" className="brand-button py-3 px-8">
+              <Link to="/marketplace?tab=clippers" className="brand-button py-3 px-8">
                 I'm a Brand
-              </a>
-              <a href="/register?type=clipper" className="secondary-button py-3 px-8">
+              </Link>
+              <Link to="/marketplace?tab=brands" className="secondary-button py-3 px-8">
                 I'm a Clipper
-              </a>
+              </Link>
             </div>
           </div>
         </div>

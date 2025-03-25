@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from "@/lib/utils";
 import { Menu, X } from 'lucide-react';
-import { useAuthContext } from '../providers/AuthProvider';
+import { useAuth } from '@/hooks/useAuth';
 
 const NavBar: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
-  const { user } = useAuthContext();
+  const { user } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -30,6 +30,9 @@ const NavBar: React.FC = () => {
     { name: 'How It Works', path: '/how-it-works' },
     { name: 'Marketplace', path: '/marketplace' },
     { name: 'Pricing', path: '/pricing' },
+    { name: 'About', path: '/about' },
+    { name: 'FAQ', path: '/faq' },
+    { name: 'Contact', path: '/contact' },
   ];
 
   return (
@@ -53,47 +56,49 @@ const NavBar: React.FC = () => {
             </span>
           </Link>
 
-          <div className="hidden md:flex md:items-center md:space-x-5">
-            {navLinks.map((link) => (
-              <Link
-                key={link.name}
-                to={link.path}
-                className={cn(
-                  "font-medium hover-lift",
-                  location.pathname === link.path 
-                    ? "text-honey-500" 
-                    : "text-charcoal-600 hover:text-honey-500 dark:text-white dark:hover:text-honey-500"
-                )}
-              >
-                {link.name}
-              </Link>
-            ))}
-          </div>
-
-          <div className="flex items-center space-x-3">
-            {user ? (
-              <Link 
-                to="/dashboard" 
-                className="brand-button py-2 px-4"
-              >
-                Go to Dashboard
-              </Link>
-            ) : (
-              <>
-                <Link 
-                  to="/auth" 
-                  className="ghost-button py-2 px-4"
+          <div className="hidden md:flex items-center space-x-8">
+            <div className="flex space-x-5">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.name}
+                  to={link.path}
+                  className={cn(
+                    "font-medium relative",
+                    location.pathname === link.path 
+                      ? "text-honey-500" 
+                      : "text-charcoal-600 hover:text-honey-500 dark:text-white dark:hover:text-honey-500",
+                    "transform transition-transform duration-200 hover:-translate-y-0.5"
+                  )}
                 >
-                  Sign In
+                  {link.name}
                 </Link>
+              ))}
+            </div>
+            <div className="flex items-center space-x-3">
+              {user ? (
                 <Link 
-                  to="/auth" 
-                  className="brand-button py-2 px-4"
+                  to="/dashboard" 
+                  className="brand-button py-2 px-4 transform transition-transform duration-200 hover:-translate-y-0.5"
                 >
-                  Get Started
+                  Go to Dashboard
                 </Link>
-              </>
-            )}
+              ) : (
+                <>
+                  <Link 
+                    to="/login" 
+                    className="ghost-button py-2 px-4 transform transition-transform duration-200 hover:-translate-y-0.5"
+                  >
+                    Sign In
+                  </Link>
+                  <Link 
+                    to="/register" 
+                    className="brand-button py-2 px-4 transform transition-transform duration-200 hover:-translate-y-0.5"
+                  >
+                    Get Started
+                  </Link>
+                </>
+              )}
+            </div>
           </div>
 
           <button
@@ -110,7 +115,6 @@ const NavBar: React.FC = () => {
         </div>
       </div>
 
-      {/* Mobile menu */}
       {isMobileMenuOpen && (
         <div className="md:hidden py-2 px-4 bg-white dark:bg-charcoal-800 shadow-lg">
           <div className="flex flex-col space-y-3 pt-3 pb-4 border-t border-gray-200 dark:border-charcoal-700">
@@ -130,24 +134,15 @@ const NavBar: React.FC = () => {
             ))}
             <div className="flex flex-col space-y-2 pt-2">
               {user ? (
-                <Link 
-                  to="/dashboard" 
-                  className="brand-button w-full justify-center"
-                >
+                <Link to="/dashboard" className="brand-button w-full justify-center">
                   Go to Dashboard
                 </Link>
               ) : (
                 <>
-                  <Link 
-                    to="/auth" 
-                    className="ghost-button w-full justify-center"
-                  >
+                  <Link to="/login" className="ghost-button w-full justify-center">
                     Sign In
                   </Link>
-                  <Link 
-                    to="/auth" 
-                    className="brand-button w-full justify-center"
-                  >
+                  <Link to="/register" className="brand-button w-full justify-center">
                     Get Started
                   </Link>
                 </>

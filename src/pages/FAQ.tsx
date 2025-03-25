@@ -1,4 +1,6 @@
+
 import React, { useState } from 'react';
+import NavBar from "@/components/NavBar";
 import Footer from "@/components/Footer";
 import { Plus, Minus } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -87,6 +89,8 @@ const FAQ: React.FC = () => {
 
   return (
     <>
+      <NavBar />
+      
       <div className="pt-24 pb-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold font-display mb-4 text-charcoal-800 dark:text-white">
@@ -158,6 +162,7 @@ const FAQ: React.FC = () => {
           </Button>
         </div>
       </div>
+
       <Footer />
     </>
   );

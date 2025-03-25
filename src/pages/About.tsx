@@ -1,37 +1,35 @@
+
 import React from 'react';
+import NavBar from "@/components/NavBar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 
 const About: React.FC = () => {
   const teamMembers = [
     {
-      name: "Alex Morgan",
-      role: "Founder & CEO",
-      bio: "Former content creator turned entrepreneur with a passion for connecting talent with opportunity.",
-      image: "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?q=80&w=1470&auto=format&fit=crop"
+      name: "Bry Stevens",
+      role: "Cofounder & Entrepreneur",
+      bio: "Currently CEO and Founder of ELEV808, with a passion for connecting talent with opportunity.",
+      image: "/lovable-uploads/3e05b96f-c1b5-4716-9ca3-97bbf2c50018.png"
     },
     {
-      name: "Zoe Chen",
-      role: "Chief Product Officer",
-      bio: "Product leader with experience at top tech companies, focused on building intuitive creator tools.",
-      image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=1976&auto=format&fit=crop"
+      name: "Jay Duquette",
+      role: "Cofounder & Entrepreneur",
+      bio: "Leader in social marketing, founder of FitRev Consulting, focused on building intuitive creator tools.",
+      image: "/lovable-uploads/42a39420-02f8-4b66-b9ae-bb6245dd4d13.png"
     },
     {
-      name: "Daniel Okafor",
-      role: "Head of Marketplace",
-      bio: "Expert in marketplace dynamics with a background in growing two-sided platforms and communities.",
-      image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=1974&auto=format&fit=crop"
-    },
-    {
-      name: "Maya Patel",
-      role: "Chief Technology Officer",
-      bio: "Software engineer and architect who's passionate about building technology that empowers creators.",
-      image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=1961&auto=format&fit=crop"
+      name: "Taylor Grassmick",
+      role: "Cofounder & Entrepreneur",
+      bio: "Ecommerce Leader and expert in marketplace dynamics with a background in growing two-sided platforms and communities.",
+      image: "/lovable-uploads/0468e802-b3e0-4bfc-bdf1-22fe646f58e9.png"
     }
   ];
 
   return (
     <>
+      <NavBar />
+      
       <div className="pt-24 pb-16">
         {/* Hero section */}
         <div className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto mb-20 text-center">
@@ -42,10 +40,10 @@ const About: React.FC = () => {
             We're building the bridge between brands and talented content clippers to create the next generation of viral short-form video content.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button className="bg-honey-500 hover:bg-honey-600 text-charcoal-800">
+            <Button className="bg-honey-500 hover:bg-honey-600 text-charcoal-800 rounded-full shadow-[0_8px_30px_rgba(0,0,0,0.25)]">
               Join Our Team
             </Button>
-            <Button variant="outline">
+            <Button variant="outline" className="rounded-full shadow-[0_8px_30px_rgba(0,0,0,0.25)]">
               Learn Our Story
             </Button>
           </div>
@@ -89,11 +87,11 @@ const About: React.FC = () => {
             A diverse group of passionate individuals dedicated to empowering the creator economy
           </p>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
             {teamMembers.map((member) => (
               <div 
                 key={member.name}
-                className="bg-white dark:bg-charcoal-800 rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
+                className="bg-white dark:bg-charcoal-800 rounded-lg overflow-hidden transition-all duration-300 hover:-translate-y-1 shadow-[0_8px_30px_rgba(0,0,0,0.25)]"
               >
                 <div className="aspect-w-1 aspect-h-1 bg-gray-200">
                   <img 
@@ -139,7 +137,7 @@ const About: React.FC = () => {
               ].map((value, index) => (
                 <div 
                   key={index}
-                  className="bg-white dark:bg-charcoal-800 p-8 rounded-lg shadow-md"
+                  className="bg-white dark:bg-charcoal-800 p-8 rounded-lg shadow-[0_8px_30px_rgba(0,0,0,0.25)]"
                 >
                   <div className="hexagon bg-honey-100 dark:bg-honey-900/20 w-12 h-12 flex items-center justify-center mb-6">
                     <span className="text-honey-500 font-bold">{index + 1}</span>
@@ -152,6 +150,7 @@ const About: React.FC = () => {
           </div>
         </div>
       </div>
+
       <Footer />
     </>
   );
